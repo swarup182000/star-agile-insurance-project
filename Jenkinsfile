@@ -47,14 +47,14 @@ ${BUILD_URL}''',
 
     stage('Containerize the Application') {
         echo 'Creating Docker image'
-        sh "${dockerCMD} build -t shubhamkushwah123/insure-me:${tagName} ."
+        sh "${dockerCMD} build -t swarup182000/insure-me:${tagName} ."
     }
 
     stage('Push to DockerHub') {
         echo 'Pushing the Docker image to DockerHub'
         withCredentials([string(credentialsId: 'dock-password', variable: 'dockerHubPassword')]) {
-            sh "${dockerCMD} login -u shubhamkushwah123 -p ${dockerHubPassword}"
-            sh "${dockerCMD} push shubhamkushwah123/insure-me:${tagName}"
+            sh "${dockerCMD} login -u swarup182000 -p ${dockerHubPassword}"
+            sh "${dockerCMD} push swarup182000/insure-me:${tagName}"
         }
     }
 
@@ -67,8 +67,3 @@ ${BUILD_URL}''',
                          playbook: 'ansible-playbook.yml'
     }
 }
-
-
-
-
-
