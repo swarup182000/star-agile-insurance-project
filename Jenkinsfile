@@ -51,12 +51,13 @@ ${BUILD_URL}''',
     }
 
     stage('Push to DockerHub') {
-        echo 'Pushing the Docker image to DockerHub'
-        withCredentials([string(credentialsId: 'dock-password', variable: 'dockerHubPassword')]) {
-            sh "${dockerCMD} login -u swarup182000 -p ${dockerHubPassword}"
-            sh "${dockerCMD} push swarup182000/insure-me:${tagName}"
-        }
+    echo '📦 Pushing the Docker image to DockerHub...'
+    withCredentials([string(credentialsId: 'dock-password', variable: 'dockerHubPassword')]) {
+        sh "echo ${dockerHubPassword} | ${dockerCMD} login -u swarup182000 --password-stdin"
+        sh "${dockerCMD} push swarup182000/insure-me:${tagName}"
     }
+}
+
 
     stage('Configure and Deploy to the Test Server') {
         ansiblePlaybook become: true,
