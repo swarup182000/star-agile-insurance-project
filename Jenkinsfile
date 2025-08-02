@@ -56,12 +56,13 @@ ${BUILD_URL}''', subject: 'Job ${JOB_NAME} ${BUILD_NUMBER} is failed', to: 'shub
         }
     }
 
-    stage('Configure and Deploy to the test-server') {
-        ansiblePlaybook become: true,
-                         credentialsId: 'ansible-key',
-                         disableHostKeyChecking: true,
-                         installation: 'ansible',
-                         inventory: '/etc/ansible/hosts',
-                         playbook: 'ansible-playbook.yml'
-    }
+   stage('Configure and Deploy to the test-server') {
+    ansiblePlaybook(
+        become: true,
+        credentialsId: 'ansible-key', // Jenkins Credentials → SSH Private Key
+        disableHostKeyChecking: true,
+        installation: 'ansible',
+        inventory: 'inventory.ini',         // 👈 Your custom inventory file
+        playbook: 'ansible-playbook.yml'
+    )
 }
