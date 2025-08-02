@@ -6,7 +6,7 @@ node {
     def tagName
 
     stage('Prepare Environment') {
-        echo 'Initialize all the variables'
+        echo '🛠️ Initialize all the variables'
         mavenHome = tool name: 'maven', type: 'maven'
         mavenCMD = "${mavenHome}/bin/mvn"
         docker = tool name: 'docker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
@@ -16,7 +16,7 @@ node {
 
     stage('Git Code Checkout') {
         try {
-            echo 'Checkout the code from Git repository'
+            echo '🔁 Checkout the code from Git repository'
             git 'https://github.com/swarup182000/star-agile-insurance-project'
         } catch (Exception e) {
             echo '❌ Exception occurred in Git Code Checkout Stage'
@@ -30,7 +30,7 @@ ${BUILD_URL}''',
     }
 
     stage('Build the Application') {
-        echo 'Cleaning... Compiling... Testing... Packaging...'
+        echo '⚙️ Cleaning... Compiling... Testing... Packaging...'
         sh "${mavenCMD} clean package"
     }
 
@@ -46,20 +46,23 @@ ${BUILD_URL}''',
     }
 
     stage('Containerize the Application') {
-        echo 'Creating Docker image'
+        echo '🐳 Creating Docker image'
         sh "${dockerCMD} build -t swarup182000/insure-me:${tagName} ."
     }
 
+    // ❌ Optional: DockerHub push is commented to avoid build failure due to credentials issue
+    /*
     stage('Push to DockerHub') {
-    echo '📦 Pushing the Docker image to DockerHub...'
-    withCredentials([string(credentialsId: 'dock-password', variable: 'dockerHubPassword')]) {
-        sh "echo ${dockerHubPassword} | ${dockerCMD} login -u swarup182000 --password-stdin"
-        sh "${dockerCMD} push swarup182000/insure-me:${tagName}"
+        echo '📦 Pushing the Docker image to DockerHub...'
+        withCredentials([string(credentialsId: 'dock-password', variable: 'dockerHubPassword')]) {
+            sh "echo ${dockerHubPassword} | ${dockerCMD} login -u swarup182000 --password-stdin"
+            sh "${dockerCMD} push swarup182000/insure-me:${tagName}"
+        }
     }
-}
-
+    */
 
     stage('Configure and Deploy to the Test Server') {
+        echo '🚀 Deploying to test server using Ansible'
         ansiblePlaybook become: true,
                          credentialsId: 'ansible-key',
                          disableHostKeyChecking: true,
