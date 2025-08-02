@@ -17,7 +17,7 @@ node {
     stage('Git Code Checkout') {
         try {
             echo 'Checkout the code from Git repository'
-            git 'https://github.com/shubhamkushwah123/star-agile-insurance-project.git'
+            git 'https://github.com/swarup182000/star-agile-insurance-project'
         } catch (Exception e) {
             echo 'Exception occurred in Git Code Checkout Stage'
             currentBuild.result = "FAILURE"
