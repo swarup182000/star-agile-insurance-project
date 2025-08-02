@@ -49,12 +49,13 @@ ${BUILD_URL}''', subject: 'Job ${JOB_NAME} ${BUILD_NUMBER} is failed', to: 'shub
     }
 
     stage('Push to DockerHub') {
-        echo '📦 Pushing the docker image to DockerHub'
-        withCredentials([string(credentialsId: 'dock-password', variable: 'dockerHubPassword')]) {
-            sh "echo ${dockerHubPassword} | ${dockerCMD} login -u swarup98 --password-stdin"
-            sh "${dockerCMD} push swarup98/insureme-app:${tagName}"
-        }
+    echo '📦 Pushing the docker image to DockerHub'
+    withCredentials([string(credentialsId: 'dock-password', variable: 'dockerHubPassword')]) {
+        sh(script: 'echo $dockerHubPassword | docker login -u swarup98 --password-stdin', shell: '/bin/bash')
+        sh "${dockerCMD} push swarup98/insureme-app:${tagName}"
     }
+}
+
 
     stage('Configure and Deploy to the test-server') {
         ansiblePlaybook(
