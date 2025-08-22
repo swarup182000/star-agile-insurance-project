@@ -1,0 +1,49 @@
+# Star-Agile Insurance Project – End-to-End DevOps Pipeline ✅
+
+## 0) Overview
+Full-stack **Insurance** app (Java/Spring Boot + Maven).  
+CI/CD pipeline set up with **GitHub Actions** + **Jenkins**, containerized via **Docker**, image pushed to **DockerHub**, and deployed on **AWS EC2** using **Ansible**.
+
+---
+
+## 1) Architecture (What we built)
+- **Source Control:** GitHub (`swarup182000/star-agile-insurance-project`)
+- **Build:** Maven (via `mvnw`)
+- **Image:** Docker (OpenJDK base) → **DockerHub**: `swarup182000/insurance-app`
+- **CI/CD:** GitHub Actions (push build + optional docker push), Jenkins (full pipeline)
+- **Deploy:** Ansible → EC2 (Docker container on port **8080**)
+
+---
+
+## 2) Prerequisites
+- DockerHub account: **`swarup182000`**
+- AWS EC2 (Ubuntu/AMD64), Security Group with inbound **TCP 22** (SSH) + **TCP 8080** (app)
+- SSH key (.pem) to access EC2
+- GitHub repo with code
+- Jenkins server (optional, for Jenkins pipeline)
+
+---
+
+## 3) Local Setup (exact steps we used)
+
+```bash
+# On EC2 / local build host
+sudo apt update -y
+sudo apt install -y git unzip
+
+# Java 17 (Temurin)
+sudo apt install -y openjdk-17-jdk
+java -version
+
+# Clone project
+git clone https://github.com/swarup182000/star-agile-insurance-project.git
+cd star-agile-insurance-project
+
+# (If GitHub password failed) Use PAT instead of password
+# or configure SSH keys. GitHub passwords are not allowed for git push.
+
+# Build JAR with Maven wrapper
+chmod +x mvnw
+./mvnw clean package -DskipTests
+# Result: target/<app>.jar
+
